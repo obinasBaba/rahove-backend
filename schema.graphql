@@ -1,0 +1,142 @@
+# Exposes a URL that specifies the behaviour of this scalar.
+directive @specifiedBy(
+  # The URL that specifies the behaviour of this scalar.
+  url: String!
+) on SCALAR
+
+type Approach implements SearchResultItem {
+  id: ID!
+  content: String!
+  voteCount: Int!
+  createdAt: String!
+  author: User!
+  task: Task!
+  detailList: [ApproachDetail!]!
+}
+
+type ApproachDetail {
+  content: String!
+  category: ApproachDetailCategory!
+}
+
+enum ApproachDetailCategory {
+  NOTE
+  EXPLANATION
+  WARNING
+}
+
+input ApproachDetailInput {
+  content: String!
+  category: ApproachDetailCategory!
+}
+
+input ApproachInput {
+  content: String!
+  detailList: [ApproachDetailInput!]!
+}
+
+type ApproachPayload {
+  errors: [UserError!]!
+  approach: Approach
+}
+
+# true for up-vote and false for down-vote
+input ApproachVoteInput {
+  up: Boolean!
+}
+
+input AuthInput {
+  username: String!
+  password: String!
+}
+
+type Me {
+  id: ID!
+  username: String
+  name: String!
+  taskList: [Task!]!
+}
+
+type Mutation {
+  userCreate(input: UserInput!): UserPayload!
+  userLogin(input: AuthInput!): UserPayload!
+  taskCreate(input: TaskInput!): TaskPayload
+  approachCreate(taskId: ID!, input: ApproachInput!): ApproachPayload
+  approachVote(approachId: ID!, input: ApproachVoteInput!): ApproachPayload
+  userDelete: UserDeletePayload
+}
+
+# Aggregate info on a range of numbers
+type NumbersInRange {
+  sum: Int!
+  count: Int!
+}
+
+type Query {
+  currentTime: String
+  numbersInRange(begin: Int!, end: Int!): NumbersInRange
+  taskMainList: [Task!]
+  taskInfo(id: ID!): Task
+  search(term: String!): [SearchResultItem!]!
+  me: Me
+}
+
+interface SearchResultItem {
+  id: ID!
+  content: String!
+}
+
+type Subscription {
+  taskMainListChanged: Task!
+  voteChanged(taskId: ID!): Approach!
+}
+
+type Task implements SearchResultItem {
+  id: ID!
+  content: String!
+  tags: [String!]!
+  approachCount: Int!
+  createdAt: String!
+  author: User!
+  approachList: [Approach!]!
+}
+
+input TaskInput {
+  content: String!
+  tags: [String!]!
+  isPrivate: Boolean!
+}
+
+type TaskPayload {
+  errors: [UserError!]!
+  task: Task
+}
+
+type User {
+  id: ID!
+  username: String
+  name: String!
+}
+
+type UserDeletePayload {
+  errors: [UserError!]!
+  deletedUserId: ID
+}
+
+type UserError {
+  message: String!
+}
+
+input UserInput {
+  username: String!
+  password: String!
+  firstName: String
+  lastName: String
+}
+
+type UserPayload {
+  errors: [UserError!]!
+  user: User
+  authToken: String
+}
+
