@@ -4,6 +4,44 @@ directive @specifiedBy(
   url: String!
 ) on SCALAR
 
+type Query {
+  currentTime: String
+  numbersInRange(begin: Int!, end: Int!): NumbersInRange
+  taskMainList: [Task!]
+  taskInfo(id: ID!): Task
+  search(term: String!): [SearchResultItem!]!
+  me: Me
+}
+
+type Mutation {
+  userCreate(input: UserInput!): UserPayload!
+  userLogin(input: AuthInput!): UserPayload!
+  taskCreate(input: TaskInput!): TaskPayload
+  approachCreate(taskId: ID!, input: ApproachInput!): ApproachPayload
+  approachVote(approachId: ID!, input: ApproachVoteInput!): ApproachPayload
+  userDelete: UserDeletePayload
+}
+
+type Subscription {
+  taskMainListChanged: Task!
+  voteChanged(taskId: ID!): Approach!
+}
+
+
+
+
+
+type Task implements SearchResultItem {
+  id: ID!
+  content: String!
+  tags: [String!]!
+  approachCount: Int!
+  createdAt: String!
+  author: User!
+  approachList: [Approach!]!
+}
+
+
 type Approach implements SearchResultItem {
   id: ID!
   content: String!
@@ -57,14 +95,6 @@ type Me {
   taskList: [Task!]!
 }
 
-type Mutation {
-  userCreate(input: UserInput!): UserPayload!
-  userLogin(input: AuthInput!): UserPayload!
-  taskCreate(input: TaskInput!): TaskPayload
-  approachCreate(taskId: ID!, input: ApproachInput!): ApproachPayload
-  approachVote(approachId: ID!, input: ApproachVoteInput!): ApproachPayload
-  userDelete: UserDeletePayload
-}
 
 # Aggregate info on a range of numbers
 type NumbersInRange {
@@ -72,34 +102,14 @@ type NumbersInRange {
   count: Int!
 }
 
-type Query {
-  currentTime: String
-  numbersInRange(begin: Int!, end: Int!): NumbersInRange
-  taskMainList: [Task!]
-  taskInfo(id: ID!): Task
-  search(term: String!): [SearchResultItem!]!
-  me: Me
-}
 
 interface SearchResultItem {
   id: ID!
   content: String!
 }
 
-type Subscription {
-  taskMainListChanged: Task!
-  voteChanged(taskId: ID!): Approach!
-}
 
-type Task implements SearchResultItem {
-  id: ID!
-  content: String!
-  tags: [String!]!
-  approachCount: Int!
-  createdAt: String!
-  author: User!
-  approachList: [Approach!]!
-}
+
 
 input TaskInput {
   content: String!
