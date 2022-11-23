@@ -2,8 +2,8 @@
 
 ## Context
 
-Build a graphql API based on [this SDL](./schema.graphql) 
 
+Build a graphql API based on [this SDL](./schema.graphql) 
 
 ### Functionality
 
