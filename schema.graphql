@@ -29,8 +29,6 @@ type Subscription {
 
 
 
-
-
 type Task implements SearchResultItem {
   id: ID!
   content: String!
