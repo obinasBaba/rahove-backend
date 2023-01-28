@@ -37,6 +37,10 @@ Build a graphql API based on [this SDL](./schema.graphql)
     - use a fragment if there is a chance
     - optimizing data fetching with tools like `dataloader`
     - Avoid deeply nested field attacks
+    - Public-users
+      - should not be able to access certain graphql operations
+      - should get a proper error response when accessing an authorized operations
+    
 - The data should be saved in the DB.
 - Provide proper API documentation.
 - Proper error handling should be used.
